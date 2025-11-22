@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../model/category.dart';
 
 class ConverterScreen extends StatefulWidget {
@@ -14,8 +13,6 @@ class ConverterScreen extends StatefulWidget {
 
 class _ConverterScreenState extends State<ConverterScreen> {
   final TextEditingController _controller = TextEditingController();
-  String fromUnit = 'Unit A';
-  String toUnit = 'Unit B';
   String result = '';
 
   ///===============for length==========================
@@ -23,30 +20,19 @@ class _ConverterScreenState extends State<ConverterScreen> {
   String lengthResult = "";
   String lengthFromUnit = "Meter";
   String lengthToUnit = "Kilometer";
-
   final lengthUnits = ["Meter", "Kilometer", "Mile", "Inch"];
 
   double lengthConvert(double value, String from, String to) {
-    Map<String, double> toMeters = {
-      "Meter": 1.0,
-      "Kilometer": 1000.0,
-      "Mile": 1609.34,
-      "Inch": 0.0254,
-    };
-
+    Map<String, double> toMeters = {"Meter": 1.0, "Kilometer": 1000.0, "Mile": 1609.34, "Inch": 0.0254};
     double valueInMeters = value * toMeters[from]!;
     return valueInMeters / toMeters[to]!;
   }
 
-  ///========================end========================
-
   ///====================Temperature====================
-  final TextEditingController temperatureInputController =
-      TextEditingController();
+  final TextEditingController temperatureInputController = TextEditingController();
   String temperatureResult = "";
   String temperatureFromUnit = "Celsius";
   String temperatureToUnit = "Fahrenheit";
-
   final temperatureUnits = ["Celsius", "Fahrenheit", "Kelvin"];
 
   double temperatureConvert(double value, String from, String to) {
@@ -55,442 +41,477 @@ class _ConverterScreenState extends State<ConverterScreen> {
     if (from == "Fahrenheit" && to == "Celsius") return (value - 32) * 5 / 9;
     if (from == "Celsius" && to == "Kelvin") return value + 273.15;
     if (from == "Kelvin" && to == "Celsius") return value - 273.15;
-    if (from == "Fahrenheit" && to == "Kelvin")
-      return ((value - 32) * 5 / 9) + 273.15;
-    if (from == "Kelvin" && to == "Fahrenheit")
-      return ((value - 273.15) * 9 / 5) + 32;
+    if (from == "Fahrenheit" && to == "Kelvin") return ((value - 32) * 5 / 9) + 273.15;
+    if (from == "Kelvin" && to == "Fahrenheit") return ((value - 273.15) * 9 / 5) + 32;
     return value;
   }
-
-  ///====================================================
 
   ///===================Currency========================
   final TextEditingController currencyInputController = TextEditingController();
   String currencyResult = "";
   String currencyFromUnit = "USD";
   String currencyToUnit = "BDT";
-
   final currencyUnits = ["USD", "EUR", "BDT", "INR"];
-  final Map<String, double> rates = {
-    "USD": 1.0,
-    "EUR": 0.9,
-    "BDT": 119.5,
-    "INR": 83.2,
-  };
+  final Map<String, double> rates = {"USD": 1.0, "EUR": 0.9, "BDT": 119.5, "INR": 83.2};
 
   double currencyConvert(double value, String from, String to) {
     double usdValue = value / rates[from]!;
     return usdValue * rates[to]!;
   }
 
-  ///===================End=============================
-
   ///===================weight==========================
   final TextEditingController weightInputController = TextEditingController();
   String weightResult = "";
   String weightFromUnit = "Kilogram";
-  String weighToUnit = "Gram";
-
+  String weightToUnit = "Gram";
   final weightUnits = ["Kilogram", "Gram", "Pound"];
 
   double weightConvert(double value, String from, String to) {
-    Map<String, double> toKg = {
-      "Kilogram": 1.0,
-      "Gram": 0.001,
-      "Pound": 0.453592,
-    };
-
+    Map<String, double> toKg = {"Kilogram": 1.0, "Gram": 0.001, "Pound": 0.453592};
     double valueInKg = value * toKg[from]!;
     return valueInKg / toKg[to]!;
   }
 
-  ///====================End============================
+  ///===============for speed==========================
+  final TextEditingController speedInputController = TextEditingController();
+  String speedResult = "";
+  String speedFromUnit = "m/s";
+  String speedToUnit = "km/h";
+  final speedUnits = ["m/s", "km/h", "mph", "ft/s"];
+
+  double speedConvert(double value, String from, String to) {
+    Map<String, double> toMps = {"m/s": 1.0, "km/h": 0.277778, "mph": 0.44704, "ft/s": 0.3048};
+    double valueInMps = value * toMps[from]!;
+    return valueInMps / toMps[to]!;
+  }
+
+  ///===============for light==========================
+  final TextEditingController lightInputController = TextEditingController();
+  String lightResult = "";
+  String lightFromUnit = "Candela";
+  String lightToUnit = "Lumen";
+  final lightUnits = ["Candela", "Lumen", "Lux"];
+
+  double lightConvert(double value, String from, String to) {
+    Map<String, double> toCandela = {"Candela": 1.0, "Lumen": 1 / (4 * 3.1416), "Lux": 0.0001};
+    double valueInCd = value * toCandela[from]!;
+    return valueInCd / toCandela[to]!;
+  }
+
+  ///===============for volume==========================
+  final TextEditingController volumeInputController = TextEditingController();
+  String volumeResult = "";
+  String volumeFromUnit = "Liter";
+  String volumeToUnit = "Milliliter";
+  final volumeUnits = ["Liter", "Milliliter", "Cubic Meter", "Gallon"];
+
+  double volumeConvert(double value, String from, String to) {
+    Map<String, double> toLiters = {"Liter": 1.0, "Milliliter": 0.001, "Cubic Meter": 1000.0, "Gallon": 3.78541};
+    double valueInLiters = value * toLiters[from]!;
+    return valueInLiters / toLiters[to]!;
+  }
+
+  ///===============for area==========================
+  final TextEditingController areaInputController = TextEditingController();
+  String areaResult = "";
+  String areaFromUnit = "Square Meter";
+  String areaToUnit = "Square Kilometer";
+  final areaUnits = ["Square Meter", "Square Kilometer", "Hectare", "Acre"];
+
+  double areaConvert(double value, String from, String to) {
+    Map<String, double> toSqM = {"Square Meter": 1.0, "Square Kilometer": 1e6, "Hectare": 10000.0, "Acre": 4046.86};
+    double valueInSqM = value * toSqM[from]!;
+    return valueInSqM / toSqM[to]!;
+  }
+
+  ///===============for time==========================
+  final TextEditingController timeInputController = TextEditingController();
+  String timeResult = "";
+  String timeFromUnit = "Second";
+  String timeToUnit = "Minute";
+  final timeUnits = ["Second", "Minute", "Hour", "Day"];
+
+  double timeConvert(double value, String from, String to) {
+    Map<String, double> toSeconds = {"Second": 1.0, "Minute": 60.0, "Hour": 3600.0, "Day": 86400.0};
+    double valueInSec = value * toSeconds[from]!;
+    return valueInSec / toSeconds[to]!;
+  }
+
+  ///===============for pressure==========================
+  final TextEditingController pressureInputController = TextEditingController();
+  String pressureResult = "";
+  String pressureFromUnit = "Pascal";
+  String pressureToUnit = "Bar";
+  final pressureUnits = ["Pascal", "Bar", "PSI", "Atmosphere"];
+
+  double pressureConvert(double value, String from, String to) {
+    Map<String, double> toPascal = {"Pascal": 1.0, "Bar": 100000.0, "PSI": 6894.76, "Atmosphere": 101325.0};
+    double valueInPa = value * toPascal[from]!;
+    return valueInPa / toPascal[to]!;
+  }
+
+  ///==================== Electricity ===================
+  final TextEditingController electricityInputController = TextEditingController();
+  String electricityResult = "";
+  String electricityFromUnit = "Volt";
+  String electricityToUnit = "Volt";
+  final electricityUnits = ["Volt", "MilliVolt", "kVolt", "Ampere"];
+
+  double electricityConvert(double value, String from, String to) {
+    Map<String, double> toVolt = {"Volt": 1.0, "MilliVolt": 0.001, "kVolt": 1000.0};
+    double valueInVolt = (toVolt.containsKey(from)) ? value * toVolt[from]! : value;
+    return (toVolt.containsKey(to)) ? valueInVolt / toVolt[to]! : valueInVolt;
+  }
+
+  ///==================== Fuel =========================
+  final TextEditingController fuelInputController = TextEditingController();
+  String fuelResult = "";
+  String fuelFromUnit = "Liter";
+  String fuelToUnit = "Gallon";
+  final fuelUnits = ["Liter", "Milliliter", "Gallon", "Cubic Meter"];
+
+  double fuelConvert(double value, String from, String to) {
+    Map<String, double> toLiters = {"Liter": 1.0, "Milliliter": 0.001, "Gallon": 3.78541, "Cubic Meter": 1000.0};
+    double valueInLiters = value * toLiters[from]!;
+    return valueInLiters / toLiters[to]!;
+  }
+
+  ///==================== Data =========================
+  final TextEditingController dataInputController = TextEditingController();
+  String dataResult = "";
+  String dataFromUnit = "Byte";
+  String dataToUnit = "Kilobyte";
+  final dataUnits = ["Bit", "Byte", "Kilobyte", "Megabyte", "Gigabyte"];
+
+  double dataConvert(double value, String from, String to) {
+    Map<String, double> toByte = {"Bit": 0.125, "Byte": 1.0, "Kilobyte": 1024.0, "Megabyte": 1048576.0, "Gigabyte": 1073741824.0};
+    double valueInByte = value * toByte[from]!;
+    return valueInByte / toByte[to]!;
+  }
+
+  ///==================== Angle ========================
+  final TextEditingController angleInputController = TextEditingController();
+  String angleResult = "";
+  String angleFromUnit = "Degree";
+  String angleToUnit = "Radian";
+  final angleUnits = ["Degree", "Radian", "Gradian"];
+
+  double angleConvert(double value, String from, String to) {
+    Map<String, double> toDegree = {"Degree": 1.0, "Radian": 180.0 / 3.14159265359, "Gradian": 0.9};
+    double valueInDegree = value * toDegree[from]!;
+    return valueInDegree / toDegree[to]!;
+  }
+
+  ///==================== Sound ========================
+  final TextEditingController soundInputController = TextEditingController();
+  String soundResult = "";
+  String soundFromUnit = "Decibel";
+  String soundToUnit = "Decibel";
+  final soundUnits = ["Decibel", "Sone", "Phon"];
+
+  double soundConvert(double value, String from, String to) {
+    Map<String, double> toDecibel = {"Decibel": 1.0, "Sone": 33.2, "Phon": 1.0};
+    double valueInDb = value * toDecibel[from]!;
+    return valueInDb / toDecibel[to]!;
+  }
+
+  ///==================== Frequency ====================
+  final TextEditingController freqInputController = TextEditingController();
+  String freqResult = "";
+  String freqFromUnit = "Hertz";
+  String freqToUnit = "Kilohertz";
+  final freqUnits = ["Hertz", "Kilohertz", "Megahertz"];
+
+  double freqConvert(double value, String from, String to) {
+    Map<String, double> toHz = {"Hertz": 1.0, "Kilohertz": 1000.0, "Megahertz": 1000000.0};
+    double valueInHz = value * toHz[from]!;
+    return valueInHz / toHz[to]!;
+  }
+
+  ///==================== History ====================
+  void saveHistory(String category, String input, String output) async {
+    final prefs = widget.prefs;
+    final hist = prefs.getStringList(category) ?? [];
+    hist.insert(0, "${DateTime.now().toIso8601String()}|$category|$input|$output");
+    if (hist.length > 5) hist.removeLast();
+    await prefs.setStringList(category, hist);
+  }
+
+  List<String> getHistory(String category) {
+    return widget.prefs.getStringList(category) ?? [];
+  }
+
+  ///==================== Build ====================
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.category.title)),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            ///for length screen
-            if (widget.category.title == 'Length') ...[
-              Column(
-                children: [
-                  TextField(
-                    controller: lengthInputController,
-                    decoration: const InputDecoration(
-                      labelText: "Enter value",
-                      border: OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.number,
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      DropdownButton<String>(
-                        value: lengthFromUnit,
-                        items: lengthUnits
-                            .map(
-                              (u) => DropdownMenuItem(value: u, child: Text(u)),
-                            )
-                            .toList(),
-                        onChanged: (val) =>
-                            setState(() => lengthFromUnit = val!),
-                      ),
-                      const Icon(Icons.arrow_forward),
-                      DropdownButton<String>(
-                        value: lengthToUnit,
-                        items: lengthUnits
-                            .map(
-                              (u) => DropdownMenuItem(value: u, child: Text(u)),
-                            )
-                            .toList(),
-                        onChanged: (val) => setState(() => lengthToUnit = val!),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      double input =
-                          double.tryParse(lengthInputController.text) ?? 0;
-                      double output = lengthConvert(
-                        input,
-                        lengthFromUnit,
-                        lengthToUnit,
-                      );
-                      setState(() {
-                        lengthResult = "$output $lengthToUnit";
-                      });
-                    },
-                    child: const Text("Convert"),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    lengthResult,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ]
-            ///end of length
-            ///for temperature
-            else if (widget.category.title == 'Temperature')
-              Column(
-                children: [
-                  TextField(
-                    controller: temperatureInputController,
-                    decoration: const InputDecoration(
-                      labelText: "Enter value",
-                      border: OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.number,
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      DropdownButton<String>(
-                        value: temperatureFromUnit,
-                        items: temperatureUnits
-                            .map(
-                              (u) => DropdownMenuItem(value: u, child: Text(u)),
-                            )
-                            .toList(),
-                        onChanged: (val) =>
-                            setState(() => temperatureFromUnit = val!),
-                      ),
-                      const Icon(Icons.arrow_forward),
-                      DropdownButton<String>(
-                        value: temperatureToUnit,
-                        items: temperatureUnits
-                            .map(
-                              (u) => DropdownMenuItem(value: u, child: Text(u)),
-                            )
-                            .toList(),
-                        onChanged: (val) =>
-                            setState(() => temperatureToUnit = val!),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      double input =
-                          double.tryParse(temperatureInputController.text) ?? 0;
-                      double output = temperatureConvert(
-                        input,
-                        temperatureFromUnit,
-                        temperatureToUnit,
-                      );
-                      setState(() {
-                        temperatureResult = "$output $temperatureToUnit";
-                      });
-                    },
-                    child: const Text("Convert"),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    temperatureResult,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              )
-            ///end of temperature
-            ///for temperature
-            else if (widget.category.title == 'Currency')
-              Column(
-                children: [
-                  TextField(
-                    controller: currencyInputController,
-                    decoration: const InputDecoration(
-                      labelText: "Enter amount",
-                      border: OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.number,
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      DropdownButton<String>(
-                        value: currencyFromUnit,
-                        items: currencyUnits
-                            .map(
-                              (u) => DropdownMenuItem(value: u, child: Text(u)),
-                            )
-                            .toList(),
-                        onChanged: (val) =>
-                            setState(() => currencyFromUnit = val!),
-                      ),
-                      const Icon(Icons.arrow_forward),
-                      DropdownButton<String>(
-                        value: currencyToUnit,
-                        items: currencyUnits
-                            .map(
-                              (u) => DropdownMenuItem(value: u, child: Text(u)),
-                            )
-                            .toList(),
-                        onChanged: (val) =>
-                            setState(() => currencyToUnit = val!),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      double input =
-                          double.tryParse(currencyInputController.text) ?? 0;
-                      double output = currencyConvert(
-                        input,
-                        currencyFromUnit,
-                        currencyToUnit,
-                      );
-                      setState(() {
-                        currencyResult = "$output $currencyToUnit";
-                      });
-                    },
-                    child: const Text("Convert"),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    currencyResult,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              )
-            ///end of temperature
-            ///for temperature
-            else if (widget.category.title == 'Weight')
-              Column(
-                children: [
-                  TextField(
-                    controller: weightInputController,
-                    decoration: const InputDecoration(
-                      labelText: "Enter value",
-                      border: OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.number,
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      DropdownButton<String>(
-                        value: weightFromUnit,
-                        items: weightUnits
-                            .map(
-                              (u) => DropdownMenuItem(value: u, child: Text(u)),
-                            )
-                            .toList(),
-                        onChanged: (val) =>
-                            setState(() => weightFromUnit = val!),
-                      ),
-                      const Icon(Icons.arrow_forward),
-                      DropdownButton<String>(
-                        value: weighToUnit,
-                        items: weightUnits
-                            .map(
-                              (u) => DropdownMenuItem(value: u, child: Text(u)),
-                            )
-                            .toList(),
-                        onChanged: (val) => setState(() => weighToUnit = val!),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      double input =
-                          double.tryParse(weightInputController.text) ?? 0;
-                      double output = weightConvert(
-                        input,
-                        weightFromUnit,
-                        weighToUnit,
-                      );
-                      setState(() {
-                        weightResult = "$output $weighToUnit";
-                      });
-                    },
-                    child: const Text("Convert"),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    weightResult,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              )
-            ///end of temperature
-            else ...[
-              Row(
-                children: [
-                  Expanded(
-                    child: _unitCard(title: 'From', valueWidget: _inputField()),
-                  ),
-                  SizedBox(width: 12),
-                  Icon(Icons.swap_horiz, size: 34),
-                  SizedBox(width: 12),
-                  Expanded(
-                    child: _unitCard(title: 'To', valueWidget: _resultBox()),
-                  ),
-                ],
-              ),
-              SizedBox(height: 18),
-              ElevatedButton.icon(
-                onPressed: _convert,
-                icon: Icon(Icons.calculate),
-                label: Text('Convert'),
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 28, vertical: 14),
-                ),
-              ),
-              SizedBox(height: 14),
-              if (result.isNotEmpty)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Result saved to history',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.bookmark_border),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              /// Length
+              if (widget.category.title == 'Length') ...[
+                _converterUI(lengthInputController, lengthUnits, lengthFromUnit, lengthToUnit,
+                        (val)=>setState(()=>lengthFromUnit=val!),
+                        (val)=>setState(()=>lengthToUnit=val!),
+                        (){
+                      double input = double.tryParse(lengthInputController.text)??0;
+                      double output = lengthConvert(input, lengthFromUnit, lengthToUnit);
+                      setState(()=>lengthResult="$output $lengthToUnit");
+                      saveHistory('Length', input.toString(), lengthResult);
+                    }, lengthResult),
+              ]
+
+              /// Temperature
+              else if (widget.category.title=='Temperature') ...[
+                _converterUI(temperatureInputController, temperatureUnits, temperatureFromUnit, temperatureToUnit,
+                        (val)=>setState(()=>temperatureFromUnit=val!),
+                        (val)=>setState(()=>temperatureToUnit=val!),
+                        (){
+                      double input = double.tryParse(temperatureInputController.text)??0;
+                      double output = temperatureConvert(input, temperatureFromUnit, temperatureToUnit);
+                      setState(()=>temperatureResult="$output $temperatureToUnit");
+                      saveHistory('Temperature', input.toString(), temperatureResult);
+                    }, temperatureResult),
+              ]
+
+              /// Currency
+              else if (widget.category.title=='Currency') ...[
+                  _converterUI(currencyInputController, currencyUnits, currencyFromUnit, currencyToUnit,
+                          (val)=>setState(()=>currencyFromUnit=val!),
+                          (val)=>setState(()=>currencyToUnit=val!),
+                          (){
+                        double input = double.tryParse(currencyInputController.text)??0;
+                        double output = currencyConvert(input, currencyFromUnit, currencyToUnit);
+                        setState(()=>currencyResult="$output $currencyToUnit");
+                        saveHistory('Currency', input.toString(), currencyResult);
+                      }, currencyResult),
+                ]
+
+                /// Weight
+                else if (widget.category.title=='Weight') ...[
+                    _converterUI(weightInputController, weightUnits, weightFromUnit, weightToUnit,
+                            (val)=>setState(()=>weightFromUnit=val!),
+                            (val)=>setState(()=>weightToUnit=val!),
+                            (){
+                          double input = double.tryParse(weightInputController.text)??0;
+                          double output = weightConvert(input, weightFromUnit, weightToUnit);
+                          setState(()=>weightResult="$output $weightToUnit");
+                          saveHistory('Weight', input.toString(), weightResult);
+                        }, weightResult),
+                  ]
+
+                  /// Speed
+                  else if (widget.category.title=='Speed') ...[
+                      _converterUI(speedInputController, speedUnits, speedFromUnit, speedToUnit,
+                              (val)=>setState(()=>speedFromUnit=val!),
+                              (val)=>setState(()=>speedToUnit=val!),
+                              (){
+                            double input = double.tryParse(speedInputController.text)??0;
+                            double output = speedConvert(input, speedFromUnit, speedToUnit);
+                            setState(()=>speedResult="$output $speedToUnit");
+                            saveHistory('Speed', input.toString(), speedResult);
+                          }, speedResult),
+                    ]
+
+                    /// Light
+                    else if (widget.category.title=='Light') ...[
+                        _converterUI(lightInputController, lightUnits, lightFromUnit, lightToUnit,
+                                (val)=>setState(()=>lightFromUnit=val!),
+                                (val)=>setState(()=>lightToUnit=val!),
+                                (){
+                              double input = double.tryParse(lightInputController.text)??0;
+                              double output = lightConvert(input, lightFromUnit, lightToUnit);
+                              setState(()=>lightResult="$output $lightToUnit");
+                              saveHistory('Light', input.toString(), lightResult);
+                            }, lightResult),
+                      ]
+
+                      /// Volume
+                      else if (widget.category.title=='Volume') ...[
+                          _converterUI(volumeInputController, volumeUnits, volumeFromUnit, volumeToUnit,
+                                  (val)=>setState(()=>volumeFromUnit=val!),
+                                  (val)=>setState(()=>volumeToUnit=val!),
+                                  (){
+                                double input = double.tryParse(volumeInputController.text)??0;
+                                double output = volumeConvert(input, volumeFromUnit, volumeToUnit);
+                                setState(()=>volumeResult="$output $volumeToUnit");
+                                saveHistory('Volume', input.toString(), volumeResult);
+                              }, volumeResult),
+                        ]
+
+                        /// Area
+                        else if (widget.category.title=='Area') ...[
+                            _converterUI(areaInputController, areaUnits, areaFromUnit, areaToUnit,
+                                    (val)=>setState(()=>areaFromUnit=val!),
+                                    (val)=>setState(()=>areaToUnit=val!),
+                                    (){
+                                  double input = double.tryParse(areaInputController.text)??0;
+                                  double output = areaConvert(input, areaFromUnit, areaToUnit);
+                                  setState(()=>areaResult="$output $areaToUnit");
+                                  saveHistory('Area', input.toString(), areaResult);
+                                }, areaResult),
+                          ]
+
+                          /// Time
+                          else if (widget.category.title=='Time') ...[
+                              _converterUI(timeInputController, timeUnits, timeFromUnit, timeToUnit,
+                                      (val)=>setState(()=>timeFromUnit=val!),
+                                      (val)=>setState(()=>timeToUnit=val!),
+                                      (){
+                                    double input = double.tryParse(timeInputController.text)??0;
+                                    double output = timeConvert(input, timeFromUnit, timeToUnit);
+                                    setState(()=>timeResult="$output $timeToUnit");
+                                    saveHistory('Time', input.toString(), timeResult);
+                                  }, timeResult),
+                            ]
+
+                            /// Pressure
+                            else if (widget.category.title=='Pressure') ...[
+                                _converterUI(pressureInputController, pressureUnits, pressureFromUnit, pressureToUnit,
+                                        (val)=>setState(()=>pressureFromUnit=val!),
+                                        (val)=>setState(()=>pressureToUnit=val!),
+                                        (){
+                                      double input = double.tryParse(pressureInputController.text)??0;
+                                      double output = pressureConvert(input, pressureFromUnit, pressureToUnit);
+                                      setState(()=>pressureResult="$output $pressureToUnit");
+                                      saveHistory('Pressure', input.toString(), pressureResult);
+                                    }, pressureResult),
+                              ]
+
+                              /// Electricity
+                              else if (widget.category.title=='Electricity') ...[
+                                  _converterUI(electricityInputController, electricityUnits, electricityFromUnit, electricityToUnit,
+                                          (val)=>setState(()=>electricityFromUnit=val!),
+                                          (val)=>setState(()=>electricityToUnit=val!),
+                                          (){
+                                        double input = double.tryParse(electricityInputController.text)??0;
+                                        double output = electricityConvert(input, electricityFromUnit, electricityToUnit);
+                                        setState(()=>electricityResult="$output $electricityToUnit");
+                                        saveHistory('Electricity', input.toString(), electricityResult);
+                                      }, electricityResult),
+                                ]
+
+                                /// Fuel
+                                else if (widget.category.title=='Fuel') ...[
+                                    _converterUI(fuelInputController, fuelUnits, fuelFromUnit, fuelToUnit,
+                                            (val)=>setState(()=>fuelFromUnit=val!),
+                                            (val)=>setState(()=>fuelToUnit=val!),
+                                            (){
+                                          double input = double.tryParse(fuelInputController.text)??0;
+                                          double output = fuelConvert(input, fuelFromUnit, fuelToUnit);
+                                          setState(()=>fuelResult="$output $fuelToUnit");
+                                          saveHistory('Fuel', input.toString(), fuelResult);
+                                        }, fuelResult),
+                                  ]
+
+                                  /// Data
+                                  else if (widget.category.title=='Data') ...[
+                                      _converterUI(dataInputController, dataUnits, dataFromUnit, dataToUnit,
+                                              (val)=>setState(()=>dataFromUnit=val!),
+                                              (val)=>setState(()=>dataToUnit=val!),
+                                              (){
+                                            double input = double.tryParse(dataInputController.text)??0;
+                                            double output = dataConvert(input, dataFromUnit, dataToUnit);
+                                            setState(()=>dataResult="$output $dataToUnit");
+                                            saveHistory('Data', input.toString(), dataResult);
+                                          }, dataResult),
+                                    ]
+
+                                    /// Angle
+                                    else if (widget.category.title=='Angle') ...[
+                                        _converterUI(angleInputController, angleUnits, angleFromUnit, angleToUnit,
+                                                (val)=>setState(()=>angleFromUnit=val!),
+                                                (val)=>setState(()=>angleToUnit=val!),
+                                                (){
+                                              double input = double.tryParse(angleInputController.text)??0;
+                                              double output = angleConvert(input, angleFromUnit, angleToUnit);
+                                              setState(()=>angleResult="$output $angleToUnit");
+                                              saveHistory('Angle', input.toString(), angleResult);
+                                            }, angleResult),
+                                      ]
+
+                                      /// Sound
+                                      else if (widget.category.title=='Sound') ...[
+                                          _converterUI(soundInputController, soundUnits, soundFromUnit, soundToUnit,
+                                                  (val)=>setState(()=>soundFromUnit=val!),
+                                                  (val)=>setState(()=>soundToUnit=val!),
+                                                  (){
+                                                double input = double.tryParse(soundInputController.text)??0;
+                                                double output = soundConvert(input, soundFromUnit, soundToUnit);
+                                                setState(()=>soundResult="$output $soundToUnit");
+                                                saveHistory('Sound', input.toString(), soundResult);
+                                              }, soundResult),
+                                        ]
+
+                                        /// Frequency
+                                        else if (widget.category.title=='Frequency') ...[
+                                            _converterUI(freqInputController, freqUnits, freqFromUnit, freqToUnit,
+                                                    (val)=>setState(()=>freqFromUnit=val!),
+                                                    (val)=>setState(()=>freqToUnit=val!),
+                                                    (){
+                                                  double input = double.tryParse(freqInputController.text)??0;
+                                                  double output = freqConvert(input, freqFromUnit, freqToUnit);
+                                                  setState(()=>freqResult="$output $freqToUnit");
+                                                  saveHistory('Frequency', input.toString(), freqResult);
+                                                }, freqResult),
+                                          ]
+
             ],
-          ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _unitCard({required String title, required Widget valueWidget}) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+
+  Widget _converterUI(
+      TextEditingController controller,
+      List<String> units,
+      String from,
+      String to,
+      Function(String?) onFromChanged,
+      Function(String?) onToChanged,
+      VoidCallback onConvert,
+      String output) {
+    return Column(
+      children: [
+        TextField(
+          controller: controller,
+          decoration: const InputDecoration(
+            labelText: "Enter value",
+            border: OutlineInputBorder(),
+          ),
+          keyboardType: TextInputType.number,
+        ),
+        const SizedBox(height: 20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text(title, style: TextStyle(fontSize: 12, color: Colors.grey)),
-            SizedBox(height: 8),
-            valueWidget,
+            DropdownButton<String>(
+              value: from,
+              items: units.map((u) => DropdownMenuItem(value: u, child: Text(u))).toList(),
+              onChanged: onFromChanged,
+            ),
+            const Icon(Icons.arrow_forward),
+            DropdownButton<String>(
+              value: to,
+              items: units.map((u) => DropdownMenuItem(value: u, child: Text(u))).toList(),
+              onChanged: onToChanged,
+            ),
           ],
         ),
-      ),
+        const SizedBox(height: 20),
+        ElevatedButton(onPressed: onConvert, child: const Text("Convert")),
+        const SizedBox(height: 20),
+        Text(
+          output,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+      ],
     );
-  }
-
-  Widget _inputField() {
-    return TextField(
-      controller: _controller,
-      keyboardType: TextInputType.numberWithOptions(decimal: true),
-      decoration: InputDecoration(
-        hintText: 'Enter value',
-        border: InputBorder.none,
-      ),
-    );
-  }
-
-  Widget _resultBox() {
-    return Container(
-      height: 48,
-      alignment: Alignment.centerLeft,
-      child: Text(
-        result.isEmpty ? '--' : result,
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-      ),
-    );
-  }
-
-  void _convert() async {
-    final txt = _controller.text.trim();
-    if (txt.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Please enter a value')));
-      return;
-    }
-
-    final value = double.tryParse(txt);
-    if (value == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Invalid number')));
-      return;
-    }
-
-    // Placeholder conversion: identity. Replace with real logic per category.
-    final out = value; // TODO: apply conversion logic
-
-    setState(() {
-      result = out.toString();
-    });
-
-    // Save to history (simple JSON string append)
-    final prefs = widget.prefs;
-    final hist = prefs.getStringList('history') ?? [];
-    hist.insert(
-      0,
-      '${DateTime.now().toIso8601String()}|${widget.category.title}|$value|$out',
-    );
-    await prefs.setStringList('history', hist);
   }
 }
+
