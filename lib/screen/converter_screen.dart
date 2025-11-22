@@ -231,10 +231,12 @@ class _ConverterScreenState extends State<ConverterScreen> {
   ///==================== History ====================
   void saveHistory(String category, String input, String output) async {
     final prefs = widget.prefs;
-    final hist = prefs.getStringList(category) ?? [];
+    // Changed to use 'history' as the key instead of the specific category name.
+    final hist = prefs.getStringList('history') ?? [];
     hist.insert(0, "${DateTime.now().toIso8601String()}|$category|$input|$output");
-    if (hist.length > 5) hist.removeLast();
-    await prefs.setStringList(category, hist);
+    // Increased the limit to 20 items.
+    if (hist.length > 20) hist.removeLast();
+    await prefs.setStringList('history', hist);
   }
 
   List<String> getHistory(String category) {
@@ -514,4 +516,3 @@ class _ConverterScreenState extends State<ConverterScreen> {
     );
   }
 }
-
